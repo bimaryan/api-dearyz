@@ -97,7 +97,7 @@ class PhotoController extends Controller
             'photo' => [
                 'nama' => $photo->nama,
                 'deskripsi' => $photo->deskripsi,
-                'image_url' => $photo->image,
+                'image_url' => asset('storage/' . $photo->image),
             ],
         ]);
     }
