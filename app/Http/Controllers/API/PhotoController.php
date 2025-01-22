@@ -11,36 +11,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
-    private $spotifyClientId = "db4b41d16d6a4975842f1201a1205091";
-    private $spotifyClientSecret = "8570bd1325694349af68ecb6d3594ad6";
-    private $spotifyTokenUrl = "https://accounts.spotify.com/api/token";
-    private $spotifySearchUrl = "https://api.spotify.com/v1/search";
-
-    private function getSpotifyToken()
-    {
-        $response = Http::asForm()->post($this->spotifyTokenUrl, [
-            'grant_type' => 'client_credentials',
-            'client_id' => $this->spotifyClientId,
-            'client_secret' => $this->spotifyClientSecret,
-        ]);
-
-        return $response->json()['access_token'];
-    }
-
-    private function fetchSpotifyTrack($query)
-    {
-        $token = $this->getSpotifyToken();
-
-        $response = Http::withToken($token)
-            ->get($this->spotifySearchUrl, [
-                'q' => $query,
-                'type' => 'track',
-                'limit' => 1
-            ]);
-
-        return $response->json();
-    }
-
     public function index()
     {
         $photos = Photo::paginate(5);
@@ -63,13 +33,7 @@ class PhotoController extends Controller
             'nama' => 'required|string',
             'image' => 'required|mimes:png,jpg,jpeg|max:10542',
             'deskripsi' => 'nullable|string',
-            'spotify_track' => 'nullable|string',
         ]);
-
-        $spotifyTrack = null;
-        if ($request->spotify_track) {
-            $spotifyTrack = $this->fetchSpotifyTrack($request->spotify_track);
-        }
 
         $file = $request->file('image');
         $filePath = $file->store('foto', 'public');
@@ -80,9 +44,6 @@ class PhotoController extends Controller
             'nama' => $request->nama,
             'image' => $filePath,
             'deskripsi' => $request->deskripsi,
-            'spotify_track_id' => $spotifyTrack['tracks']['items'][0]['id'] ?? null,
-            'spotify_track_name' => $spotifyTrack['tracks']['items'][0]['name'] ?? null,
-            'spotify_track_url' => $spotifyTrack['tracks']['items'][0]['external_urls']['spotify'] ?? null,
         ]);
 
         return response()->json([
@@ -92,8 +53,6 @@ class PhotoController extends Controller
                 'nama' => $photo->nama,
                 'deskripsi' => $photo->deskripsi,
                 'image_url' => $imageUrl,
-                'spotify_track_name' => $photo->spotify_track_name,
-                'spotify_track_url' => $photo->spotify_track_url,
             ],
         ]);
     }
@@ -104,13 +63,7 @@ class PhotoController extends Controller
             'nama' => 'required|string',
             'image' => 'nullable|mimes:png,jpg,jpeg|max:10542',
             'deskripsi' => 'nullable|string',
-            'spotify_track' => 'nullable|string',
         ]);
-
-        $spotifyTrack = null;
-        if ($request->spotify_track) {
-            $spotifyTrack = $this->fetchSpotifyTrack($request->spotify_track);
-        }
 
         $photo->nama = $request->input('nama');
         $photo->deskripsi = $request->input('deskripsi');
@@ -123,10 +76,6 @@ class PhotoController extends Controller
             $file = $request->file('image');
             $photo->image = $file->store('foto', 'public');
         }
-
-        $photo->spotify_track_id = $spotifyTrack['tracks']['items'][0]['id'] ?? $photo->spotify_track_id;
-        $photo->spotify_track_name = $spotifyTrack['tracks']['items'][0]['name'] ?? $photo->spotify_track_name;
-        $photo->spotify_track_url = $spotifyTrack['tracks']['items'][0]['external_urls']['spotify'] ?? $photo->spotify_track_url;
 
         $photo->save();
 
@@ -151,8 +100,6 @@ class PhotoController extends Controller
                 'nama' => $photo->nama,
                 'deskripsi' => $photo->deskripsi,
                 'image_url' => asset('storage/' . $photo->image),
-                'spotify_track_name' => $photo->spotify_track_name,
-                'spotify_track_url' => $photo->spotify_track_url,
             ],
         ]);
     }
