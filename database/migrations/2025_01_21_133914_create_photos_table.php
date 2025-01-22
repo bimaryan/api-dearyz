@@ -16,6 +16,11 @@ return new class extends Migration
             $table->string('nama');
             $table->string('image');
             $table->string('deskripsi')->nullable();
+
+            $table->string('spotify_track_id')->nullable();
+            $table->string('spotify_track_name')->nullable();
+            $table->string('spotify_track_url')->nullable();
+
             $table->timestamps();
         });
     }
