@@ -98,6 +98,7 @@ class PhotoController extends Controller
         return response()->json([
             'photo' => [
                 'nama' => $photo->nama,
+                'created_at' => $photo->created_at,
                 'deskripsi' => $photo->deskripsi,
                 'image_url' => asset('storage/' . $photo->image),
             ],
