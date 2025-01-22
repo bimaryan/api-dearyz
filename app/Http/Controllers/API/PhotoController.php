@@ -83,11 +83,11 @@ class PhotoController extends Controller
         ]);
     }
 
-    public function show($photo)
+    public function show($allphoto)
     {
-        $photos = Photo::where('nama', $photo)->first();
+        $photo = Photo::where('nama', $allphoto)->first();
 
-        if (!$photos) {
+        if (!$photo) {
             return response()->json([
                 'message' => 'Photo not found',
             ], 404);
@@ -95,9 +95,9 @@ class PhotoController extends Controller
 
         return response()->json([
             'photo' => [
-                'nama' => $photos->nama,
-                'deskripsi' => $photos->deskripsi,
-                'image_url' => $photos->image,
+                'nama' => $photo->nama,
+                'deskripsi' => $photo->deskripsi,
+                'image_url' => $photo->image,
             ],
         ]);
     }
