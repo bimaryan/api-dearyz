@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Photo;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -86,6 +87,7 @@ class PhotoController extends Controller
     public function show($allphoto)
     {
         $photo = Photo::where('nama', $allphoto)->first();
+        $user = User::where('name')->first();
 
         if (!$photo) {
             return response()->json([
@@ -95,6 +97,7 @@ class PhotoController extends Controller
 
         return response()->json([
             'photo' => [
+                'user' => $user->name,
                 'nama' => $photo->nama,
                 'deskripsi' => $photo->deskripsi,
                 'image_url' => asset('storage/' . $photo->image),
