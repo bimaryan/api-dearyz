@@ -86,7 +86,11 @@ class PhotoController extends Controller
     public function show(Photo $photo)
     {
         return response()->json([
-            'photo' => $photo,
+            'photo' => [
+                'nama' => $photo->nama,
+                'deskripsi' => $photo->deskripsi,
+                'image' => $photo->image,
+            ],
         ]);
     }
 
