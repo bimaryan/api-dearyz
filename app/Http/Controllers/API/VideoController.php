@@ -8,6 +8,22 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
+    public function index()
+    {
+        $videos = Video::paginate(6);
+
+        $videos->getCollection()->transform(function ($video) {
+            $video->video_url = asset('storage/' . $video->video);
+            return $video;
+        });
+
+        return response()->json([
+            'videos' => $videos->items(),
+            'current_page' => $videos->currentPage(),
+            'total_pages' => $videos->lastPage(),
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -19,7 +35,9 @@ class VideoController extends Controller
         $file = $request->file('video');
         $filePath = $file->store('video', 'public');
 
-        Video::create([
+        $videoUrl = asset('storage/' . $filePath);
+
+        $video = Video::create([
             'nama' => $request->nama,
             'video' => $filePath,
             'deskripsi' => $request->deskripsi,
@@ -27,6 +45,11 @@ class VideoController extends Controller
 
         return response()->json([
             'message' => 'Berhasil menambahkan video',
+            'video' => [
+                'id' => $video->id,
+                'nama' => $video->nama,
+                'video_url' => $videoUrl,
+            ]
         ]);
     }
 }

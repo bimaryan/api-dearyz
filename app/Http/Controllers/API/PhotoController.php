@@ -13,7 +13,7 @@ class PhotoController extends Controller
 {
     public function index()
     {
-        $photos = Photo::paginate(5);
+        $photos = Photo::paginate(6);
 
         $photos->getCollection()->transform(function ($photo) {
             $photo->image_url = asset('storage/' . $photo->image);
