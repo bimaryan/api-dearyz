@@ -1056,7 +1056,7 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.48.25",
+            "version": "v11.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
@@ -1283,7 +1283,7 @@
             },
             "conflict": {
                 "illuminate/console": ">=10.17.0 <10.25.0",
-                "laravel/framework": ">=10.17.0 <10.25.0"
+                "laravel/framework": ">=11.0.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5",
@@ -6095,7 +6095,7 @@
             },
             "require-dev": {
                 "brianium/paratest": "^7.3.1",
-                "laravel/framework": "^10.48.22",
+                "laravel/framework": "^11.0.0",
                 "laravel/pint": "^1.18.1",
                 "laravel/sail": "^1.36.0",
                 "laravel/sanctum": "^3.3.3",
